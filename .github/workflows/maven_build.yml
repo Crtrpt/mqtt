@@ -17,6 +17,5 @@ jobs:
                 uses: actions/setup-java@v1
                 with:
                     java-version: '8'
-                    architecture: 'adopt'
             -   name: 构建
                 run: mvn -B package --file pom.xml
