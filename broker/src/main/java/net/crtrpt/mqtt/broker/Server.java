@@ -16,7 +16,6 @@
 package net.crtrpt.mqtt.broker;
 
 
-import lombok.extern.slf4j.Slf4j;
 import net.crtrpt.mqtt.BrokerConstants;
 import net.crtrpt.mqtt.broker.subscriptions.Topic;
 import net.crtrpt.mqtt.interception.InterceptHandler;
