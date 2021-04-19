@@ -83,7 +83,7 @@ public class MQTTMessageLogger extends ChannelDuplexHandler {
             case CONNACK:
             case PINGREQ:
             case PINGRESP:
-                LOG.debug("{} {} <{}>", direction, messageType, clientID);
+                LOG.info("{} {} <{}>", direction, messageType, clientID);
                 break;
             case CONNECT:
             case DISCONNECT:
@@ -91,16 +91,16 @@ public class MQTTMessageLogger extends ChannelDuplexHandler {
                 break;
             case SUBSCRIBE:
                 MqttSubscribeMessage subscribe = (MqttSubscribeMessage) msg;
-                LOG.info("{} SUBSCRIBE <{}> to topics {}", direction, clientID,
+                LOG.info("{} 订阅 <{}> 主题 {}", direction, clientID,
                     subscribe.payload().topicSubscriptions());
                 break;
             case UNSUBSCRIBE:
                 MqttUnsubscribeMessage unsubscribe = (MqttUnsubscribeMessage) msg;
-                LOG.info("{} UNSUBSCRIBE <{}> to topics <{}>", direction, clientID, unsubscribe.payload().topics());
+                LOG.info("{} 取消订阅 <{}> 主题 <{}>", direction, clientID, unsubscribe.payload().topics());
                 break;
             case PUBLISH:
                 MqttPublishMessage publish = (MqttPublishMessage) msg;
-                LOG.debug("{} PUBLISH <{}> to topics <{}>", direction, clientID, publish.variableHeader().topicName());
+                LOG.info("{} 发布 <{}> 主题 <{}>", direction, clientID, publish.variableHeader().topicName());
                 break;
             case PUBREC:
             case PUBCOMP:

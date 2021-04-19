@@ -120,7 +120,7 @@ public class InflightResender extends ChannelDuplexHandler {
         // Avoid the case where destroy() is called before scheduling timeouts.
         // See: https://github.com/netty/netty/issues/143
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Initializing autoflush handler on channel {}", ctx.channel());
+            LOG.info("Initializing autoflush handler on channel {}", ctx.channel());
         }
         switch (state) {
             case 1:

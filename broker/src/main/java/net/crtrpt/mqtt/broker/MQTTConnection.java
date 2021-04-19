@@ -128,30 +128,30 @@ final class MQTTConnection {
         MqttConnectPayload payload = msg.payload();
         String clientId = payload.clientIdentifier();
         final String username = payload.userName();
-        LOG.trace("Processing CONNECT message. CId: {} username: {}", clientId, username);
+        LOG.info("处理链接消息 CId: {} username: {}", clientId, username);
 
         if (isNotProtocolVersion(msg, MqttVersion.MQTT_3_1) && isNotProtocolVersion(msg, MqttVersion.MQTT_3_1_1)) {
-            LOG.warn("MQTT protocol version is not valid. CId: {}", clientId);
+            LOG.warn("MQTT 协议版本错误. ClientId: {}", clientId);
             abortConnection(CONNECTION_REFUSED_UNACCEPTABLE_PROTOCOL_VERSION);
             return;
         }
         final boolean cleanSession = msg.variableHeader().isCleanSession();
         if (clientId == null || clientId.length() == 0) {
             if (!brokerConfig.isAllowZeroByteClientId()) {
-                LOG.info("Broker doesn't permit MQTT empty client ID. Username: {}", username);
+                LOG.info("Broker 不允许空的 clientId Username: {}", username);
                 abortConnection(CONNECTION_REFUSED_IDENTIFIER_REJECTED);
                 return;
             }
 
             if (!cleanSession) {
-                LOG.info("MQTT client ID cannot be empty for persistent session. Username: {}", username);
+                LOG.info("需要持久化的session clientid 不能为空. Username: {}", username);
                 abortConnection(CONNECTION_REFUSED_IDENTIFIER_REJECTED);
                 return;
             }
 
             // Generating client id.
             clientId = UUID.randomUUID().toString().replace("-", "");
-            LOG.debug("Client has connected with integration generated id: {}, username: {}", clientId, username);
+            LOG.info("生成clientID: {}, username: {}", clientId, username);
         }
 
         if (!login(msg, clientId)) {
@@ -162,12 +162,12 @@ final class MQTTConnection {
 
         final SessionRegistry.SessionCreationResult result;
         try {
-            LOG.trace("Binding MQTTConnection to session");
+            LOG.trace("绑定 connect 和 session");
             result = sessionRegistry.createOrReopenSession(msg, clientId, this.getUsername());
             result.session.bind(this);
             bindedSession = result.session;
         } catch (SessionCorruptedException scex) {
-            LOG.warn("MQTT session for client ID {} cannot be created", clientId);
+            LOG.error("绑定connect 和 session 异常", clientId);
             abortConnection(CONNECTION_REFUSED_SERVER_UNAVAILABLE);
             return;
         }
@@ -182,7 +182,7 @@ final class MQTTConnection {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.isSuccess()) {
-                    LOG.trace("CONNACK sent, channel: {}", channel);
+                    LOG.trace("CONNACK 已经发送, channel: {}", channel);
                     if (!result.session.completeConnection()) {
                         // send DISCONNECT and close the channel
                         final MqttMessage disconnectMsg = MqttMessageBuilders.disconnect().build();
@@ -201,12 +201,12 @@ final class MQTTConnection {
                         setupInflightResender(channel);
 
                         postOffice.dispatchConnection(msg);
-                        LOG.trace("dispatch connection: {}", msg.toString());
+                        LOG.info("开始调度 connection: {}", msg.toString());
                     }
                 } else {
                     bindedSession.disconnect();
                     sessionRegistry.remove(bindedSession);
-                    LOG.error("CONNACK send failed, cleanup session and close the connection", future.cause());
+                    LOG.error("CONNACK 发送异常, 清理session 和 connect", future.cause());
                     channel.close();
                 }
 
@@ -227,7 +227,7 @@ final class MQTTConnection {
         int idleTime = Math.round(keepAlive * 1.5f);
         setIdleTime(channel.pipeline(), idleTime);
 
-        LOG.debug("Connection has been configured CId={}, keepAlive={}, removeTemporaryQoS2={}, idleTime={}",
+        LOG.info("Connection has been configured CId={}, keepAlive={}, removeTemporaryQoS2={}, idleTime={}",
             clientId, keepAlive, msg.variableHeader().isCleanSession(), idleTime);
     }
 
@@ -283,7 +283,7 @@ final class MQTTConnection {
             postOffice.fireWill(bindedSession.getWill());
         }
         if (bindedSession.isClean()) {
-            LOG.debug("Remove session for client");
+            LOG.info("Remove session for client");
             sessionRegistry.remove(bindedSession);
         } else {
             bindedSession.disconnect();
@@ -363,7 +363,7 @@ final class MQTTConnection {
         final boolean retain = msg.fixedHeader().isRetain();
         final Topic topic = new Topic(topicName);
         if (!topic.isValid()) {
-            LOG.debug("Drop connection because of invalid topic format");
+            LOG.info("Drop connection because of invalid topic format");
             dropConnection();
         }
         switch (qos) {
@@ -409,14 +409,14 @@ final class MQTTConnection {
             LOG.trace("Sending PUBLISH({}) message. MessageId={}, topic={}, payload={}", qos, packetId, topicName,
                 DebugUtils.payload2Str(publishMsg.payload()));
         } else {
-            LOG.debug("Sending PUBLISH({}) message. MessageId={}, topic={}", qos, packetId, topicName);
+            LOG.info("Sending PUBLISH({}) message. MessageId={}, topic={}", qos, packetId, topicName);
         }
         sendIfWritableElseDrop(publishMsg);
     }
 
     void sendIfWritableElseDrop(MqttMessage msg) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("OUT {}", msg.fixedHeader().messageType());
+            LOG.info("OUT {}", msg.fixedHeader().messageType());
         }
         if (channel.isWritable()) {
             ChannelFuture channelFuture;
@@ -431,7 +431,7 @@ final class MQTTConnection {
 
     public void writabilityChanged() {
         if (channel.isWritable()) {
-            LOG.debug("Channel is again writable");
+            LOG.info("Channel is again writable");
             bindedSession.writabilityChanged();
         }
     }
@@ -516,7 +516,7 @@ final class MQTTConnection {
     }
 
     public void readCompleted() {
-        LOG.debug("readCompleted client CId: {}", getClientId());
+        LOG.info("readCompleted client CId: {}", getClientId());
         if (getClientId() != null) {
             // TODO drain all messages in target's session in-flight message queue
             bindedSession.flushAllQueuedMessages();

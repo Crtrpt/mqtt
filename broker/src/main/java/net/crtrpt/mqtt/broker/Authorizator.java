@@ -36,7 +36,7 @@ final class Authorizator {
             } else {
                 MqttQoS qos;
                 if (topic.isValid()) {
-                    LOG.debug("订阅 username: {}, messageId: {}, topic: {}",
+                    LOG.info("订阅 username: {}, messageId: {}, topic: {}",
                         username, messageId, topic);
                     qos = req.qualityOfService();
                 } else {

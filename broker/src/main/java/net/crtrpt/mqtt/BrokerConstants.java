@@ -22,15 +22,10 @@ public final class BrokerConstants {
 
     public static final String INTERCEPT_HANDLER_PROPERTY_NAME = "intercept.handler";
     public static final String BROKER_INTERCEPTOR_THREAD_POOL_SIZE = "intercept.thread_pool.size";
-    public static final String PERSISTENT_STORE_PROPERTY_NAME = "persistent_store";
     public static final String PASSWORD_FILE_PROPERTY_NAME = "password_file";
     public static final String PORT_PROPERTY_NAME = "port";
     public static final String HOST_PROPERTY_NAME = "host";
 
-    /**
-     * Defines the SSL implementation to use, default to "JDK".
-     * @see io.netty.handler.ssl.SslProvider#name()
-     */
     public static final String SSL_PROVIDER = "ssl_provider";
 
     public static final String JKS_PATH_PROPERTY_NAME = "jks_path";
@@ -44,10 +39,6 @@ public final class BrokerConstants {
     public static final String ALLOW_ZERO_BYTE_CLIENT_ID_PROPERTY_NAME = "allow_zero_byte_client_id";
     public static final String AUTHORIZATOR_CLASS_NAME = "authorizator_class";
     public static final String AUTHENTICATOR_CLASS_NAME = "authenticator_class";
-    public static final String DB_AUTHENTICATOR_DRIVER = "authenticator.db.driver";
-    public static final String DB_AUTHENTICATOR_URL = "authenticator.db.url";
-    public static final String DB_AUTHENTICATOR_QUERY = "authenticator.db.query";
-    public static final String DB_AUTHENTICATOR_DIGEST = "authenticator.db.digest";
     public static final int PORT = 1883;
 
     public static final String DISABLED_PORT_BIND = "disabled";
@@ -62,11 +53,6 @@ public final class BrokerConstants {
     public static final String NETTY_MAX_BYTES_PROPERTY_NAME = "netty.mqtt.message_size";
     public static final int DEFAULT_NETTY_MAX_BYTES_IN_MESSAGE = 8092;
     public static final String IMMEDIATE_BUFFER_FLUSH_PROPERTY_NAME = "immediate_buffer_flush";
-
-    public static final String METRICS_LIBRATO_EMAIL_PROPERTY_NAME = "metrics.librato.email";
-    public static final String METRICS_LIBRATO_TOKEN_PROPERTY_NAME = "metrics.librato.token";
-    public static final String METRICS_LIBRATO_SOURCE_PROPERTY_NAME = "metrics.librato.source";
-
 
     private BrokerConstants() {
     }

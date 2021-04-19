@@ -321,7 +321,7 @@ class Session {
         for (InFlightPacket packet : expired) {
             sb.append(packet.packetId).append(", ");
         }
-        LOG.debug("Resending {} in flight packets [{}]", expired.size(), sb);
+        LOG.info("Resending {} in flight packets [{}]", expired.size(), sb);
     }
 
     private MqttPublishMessage publishNotRetainedDuplicated(InFlightPacket notAckPacketId, Topic topic, MqttQoS qos,

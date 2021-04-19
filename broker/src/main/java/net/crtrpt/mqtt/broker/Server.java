@@ -61,8 +61,7 @@ public class Server {
 
 
     public void startServer(Properties configProps) throws IOException {
-        log.info("Starting Mqtt integration using properties object");
-        final IConfig config = new MemoryConfig(configProps);
+         final IConfig config = new MemoryConfig(configProps);
         startServer(config);
     }
 

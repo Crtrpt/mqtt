@@ -211,7 +211,7 @@ class PostOffice {
 
             boolean isSessionPresent = targetSession != null;
             if (isSessionPresent) {
-                LOG.debug("Sending PUBLISH message to active subscriber CId: {}, topicFilter: {}, qos: {}",
+                LOG.info("Sending PUBLISH message to active subscriber CId: {}, topicFilter: {}, qos: {}",
                           sub.getClientId(), sub.getTopicFilter(), qos);
                 // we need to retain because duplicate only copy r/w indexes and don't retain() causing refCnt = 0
                 ByteBuf payload = origPayload.retainedDuplicate();
@@ -219,7 +219,7 @@ class PostOffice {
             } else {
                 // If we are, the subscriber disconnected after the subscriptions tree selected that session as a
                 // destination.
-                LOG.debug("PUBLISH to not yet present session. CId: {}, topicFilter: {}, qos: {}", sub.getClientId(),
+                LOG.info("PUBLISH to not yet present session. CId: {}, topicFilter: {}, qos: {}", sub.getClientId(),
                           sub.getTopicFilter(), qos);
             }
         }

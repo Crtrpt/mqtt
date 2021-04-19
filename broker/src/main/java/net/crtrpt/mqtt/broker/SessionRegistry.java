@@ -169,13 +169,13 @@ public class SessionRegistry {
         }
 
         if (creationResult.mode == CreationModeEnum.DROP_EXISTING) {
-            LOG.debug("Drop session of already connected client with same id");
+            LOG.info("Drop session of already connected client with same id");
             if (!pool.replace(clientId, oldSession, newSession)) {
                 //the other client was disconnecting and removed it's own session
                 pool.put(clientId, newSession);
             }
         } else {
-            LOG.debug("Replace session of client with same id");
+            LOG.info("Replace session of client with same id");
             if (!pool.replace(clientId, oldSession, oldSession)) {
                 throw new SessionCorruptedException("old session was already removed");
             }

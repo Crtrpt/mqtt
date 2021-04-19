@@ -68,7 +68,7 @@ class NewNettyAcceptor {
                 final SocketAddress localAddress = future.channel().localAddress();
                 if (localAddress instanceof InetSocketAddress) {
                     InetSocketAddress inetAddress = (InetSocketAddress) localAddress;
-                    LOG.debug("bound {} port: {}", transportName, inetAddress.getPort());
+                    LOG.info("bound {} port: {}", transportName, inetAddress.getPort());
                     int port = inetAddress.getPort();
                     ports.put(transportName, port);
                 }
@@ -95,7 +95,7 @@ class NewNettyAcceptor {
     private Class<? extends ServerSocketChannel> channelClass;
 
     public void initialize(NewNettyMQTTHandler mqttHandler, IConfig props, ISslContextCreator sslCtxCreator) {
-        LOG.debug("初始化");
+        LOG.info("初始化");
 
         nettySoBacklog = props.intProp(BrokerConstants.NETTY_SO_BACKLOG_PROPERTY_NAME, 128);
         nettySoReuseaddr = props.boolProp(BrokerConstants.NETTY_SO_REUSEADDR_PROPERTY_NAME, true);
@@ -157,7 +157,7 @@ class NewNettyAcceptor {
     }
 
     private void initializePlainTCPTransport(NewNettyMQTTHandler handler, IConfig props) {
-        LOG.debug("配置 tcp mqtt ");
+        LOG.info("配置 tcp mqtt ");
         final MqttIdleTimeoutHandler timeoutHandler = new MqttIdleTimeoutHandler();
         String host = props.getProperty(BrokerConstants.HOST_PROPERTY_NAME);
         String tcpPortProp = props.getProperty(PORT_PROPERTY_NAME, DISABLED_PORT_BIND);
@@ -187,7 +187,7 @@ class NewNettyAcceptor {
 
     @SuppressWarnings("FutureReturnValueIgnored")
     public void close() {
-        LOG.debug("Closing Netty acceptor...");
+        LOG.info("Closing Netty acceptor...");
         if (workerGroup == null || bossGroup == null) {
             LOG.error("Netty acceptor is not initialized");
             throw new IllegalStateException("Invoked close on an Acceptor that wasn't initialized");

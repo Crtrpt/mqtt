@@ -17,12 +17,16 @@ package net.crtrpt.mqtt;
 
 import net.crtrpt.mqtt.broker.ISubscriptionsRepository;
 import net.crtrpt.mqtt.broker.subscriptions.Subscription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class MemorySubscriptionsRepository implements ISubscriptionsRepository {
+
+    private static final Logger log = LoggerFactory.getLogger(MemorySubscriptionsRepository.class);
 
     private final List<Subscription> subscriptions = new ArrayList<>();
 
@@ -33,11 +37,13 @@ public class MemorySubscriptionsRepository implements ISubscriptionsRepository {
 
     @Override
     public void addNewSubscription(Subscription subscription) {
+        log.info("增加新的订阅 clientId:{} topic{}",subscription.getClientId(),subscription.getTopicFilter());
         subscriptions.add(subscription);
     }
 
     @Override
     public void removeSubscription(String topic, String clientID) {
+        log.info("取消订阅 clientId{} topic{} ",clientID,topic);
         subscriptions.stream()
             .filter(s -> s.getTopicFilter().toString().equals(topic) && s.getClientId().equals(clientID))
             .findFirst()

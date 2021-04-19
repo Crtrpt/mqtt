@@ -41,7 +41,7 @@ public class CTrieSubscriptionDirectory implements ISubscriptionsDirectory {
         }
 
         for (Subscription subscription : this.subscriptionsRepository.listAllSubscriptions()) {
-            LOG.debug("Re-subscribing {}", subscription);
+            LOG.info("Re-subscribing {}", subscription);
             ctrie.addToTree(subscription);
         }
         if (LOG.isTraceEnabled()) {
