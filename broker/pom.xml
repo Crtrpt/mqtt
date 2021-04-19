@@ -6,7 +6,7 @@
         <relativePath>../</relativePath>
         <artifactId>mqtt-parent</artifactId>
         <groupId>net.crtrpt</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>mqtt-broker</artifactId>
