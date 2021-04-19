@@ -27,9 +27,9 @@ import io.netty.handler.timeout.IdleStateEvent;
 import static io.netty.channel.ChannelFutureListener.CLOSE_ON_FAILURE;
 
 @Sharable
-public class MoquetteIdleTimeoutHandler extends ChannelDuplexHandler {
+public class MqttIdleTimeoutHandler extends ChannelDuplexHandler {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MoquetteIdleTimeoutHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MqttIdleTimeoutHandler.class);
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {

@@ -23,7 +23,7 @@ import net.crtrpt.mqtt.BrokerConstants;
  */
 public abstract class IConfig {
 
-    public static final String DEFAULT_CONFIG = "config/moquette.conf";
+    public static final String DEFAULT_CONFIG = "config/Mqtt.conf";
 
     public abstract void setProperty(String name, String value);
 

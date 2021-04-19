@@ -46,16 +46,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Moquette integration implementation to load SSL certificate from local filesystem path configured in
+ * Mqtt integration implementation to load SSL certificate from local filesystem path configured in
  * config file.
  */
-class DefaultMoquetteSslContextCreator implements ISslContextCreator {
+class DefaultMqttSslContextCreator implements ISslContextCreator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultMoquetteSslContextCreator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultMqttSslContextCreator.class);
 
     private final IConfig props;
 
-    DefaultMoquetteSslContextCreator(IConfig props) {
+    DefaultMqttSslContextCreator(IConfig props) {
         this.props = Objects.requireNonNull(props);
     }
 

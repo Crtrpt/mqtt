@@ -158,7 +158,7 @@ class NewNettyAcceptor {
 
     private void initializePlainTCPTransport(NewNettyMQTTHandler handler, IConfig props) {
         LOG.debug("配置 tcp mqtt ");
-        final MoquetteIdleTimeoutHandler timeoutHandler = new MoquetteIdleTimeoutHandler();
+        final MqttIdleTimeoutHandler timeoutHandler = new MqttIdleTimeoutHandler();
         String host = props.getProperty(BrokerConstants.HOST_PROPERTY_NAME);
         String tcpPortProp = props.getProperty(PORT_PROPERTY_NAME, DISABLED_PORT_BIND);
         int port = Integer.parseInt(tcpPortProp);
@@ -171,7 +171,7 @@ class NewNettyAcceptor {
         });
     }
 
-    private void configureMQTTPipeline(ChannelPipeline pipeline, MoquetteIdleTimeoutHandler timeoutHandler,
+    private void configureMQTTPipeline(ChannelPipeline pipeline, MqttIdleTimeoutHandler timeoutHandler,
                                        NewNettyMQTTHandler handler) {
         pipeline.addFirst("idleStateHandler", new IdleStateHandler(nettyChannelTimeoutSeconds, 0, 0));
         pipeline.addAfter("idleStateHandler", "idleEventHandler", timeoutHandler);

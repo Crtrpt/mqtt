@@ -10,13 +10,11 @@ client/target/
 parser_commons/target/
 netty_parser/target/
 distribution/target/
-broker/moquette.log
+log/
 broker/runner
 /bundle/target/
 /bundle/runner/
-/osgi_test/target/
 /perf/target/
-/mapdb_storage/target/
 *~
 *.log*
 .DS_Store

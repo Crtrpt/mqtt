@@ -38,7 +38,7 @@ public class FileResourceLoader implements IResourceLoader {
     }
 
     public FileResourceLoader(File defaultFile) {
-        this(defaultFile, System.getProperty("moquette.path", null));
+        this(defaultFile, System.getProperty("Mqtt.path", null));
     }
 
     public FileResourceLoader(String parentPath) {

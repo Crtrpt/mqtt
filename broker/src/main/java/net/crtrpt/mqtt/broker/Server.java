@@ -61,19 +61,19 @@ public class Server {
 
 
     public void startServer(Properties configProps) throws IOException {
-        log.info("Starting Moquette integration using properties object");
+        log.info("Starting Mqtt integration using properties object");
         final IConfig config = new MemoryConfig(configProps);
         startServer(config);
     }
 
     /**
-     * Starts Moquette bringing the configuration files from the given Config implementation.
+     * Starts Mqtt bringing the configuration files from the given Config implementation.
      *
      * @param config the configuration to use to start the broker.
      * @throws IOException in case of any IO Error.
      */
     public void startServer(IConfig config) throws IOException {
-        log.info("Starting Moquette integration using IConfig instance");
+        log.info("启动MQTT服务器");
         startServer(config, null);
     }
 
@@ -102,7 +102,7 @@ public class Server {
         if (handlers == null) {
             handlers = Collections.emptyList();
         }
-        log.info("Starting Moquette Server. MQTT message interceptors={}", LoggingUtils.getInterceptorIds(handlers));
+        log.info("启动MQTT服务器. MQTT message interceptors={}", LoggingUtils.getInterceptorIds(handlers));
 
         scheduler = Executors.newScheduledThreadPool(1);
 
@@ -110,14 +110,9 @@ public class Server {
         if (handlerProp != null) {
             config.setProperty(BrokerConstants.INTERCEPT_HANDLER_PROPERTY_NAME, handlerProp);
         }
-        final String persistencePath = config.getProperty(BrokerConstants.PERSISTENT_STORE_PROPERTY_NAME);
-        log.info("Configuring Using persistent store file, path: {}", persistencePath);
         initInterceptors(config, handlers);
         log.info("初始化协议处理器");
-        if (sslCtxCreator == null) {
-            log.info("Using default SSL context creator");
-            sslCtxCreator = new DefaultMoquetteSslContextCreator(config);
-        }
+        sslCtxCreator = new DefaultMqttSslContextCreator(config);
         authenticator = initializeAuthenticator(authenticator, config);
         authorizatorPolicy = initializeAuthorizatorPolicy(authorizatorPolicy, config);
 
@@ -145,7 +140,7 @@ public class Server {
         acceptor.initialize(mqttHandler, config, sslCtxCreator);
 
         final long startTime = System.currentTimeMillis() - start;
-        log.info("moquette 启动成功 {} ms", startTime);
+        log.info("MQTT 启动成功 {} ms", startTime);
         initialized = true;
     }
 
@@ -177,8 +172,6 @@ public class Server {
     private <T, U> T loadClass(String className, Class<T> intrface, Class<U> constructorArgClass, U props) {
         T instance = null;
         try {
-            // check if constructor with constructor arg class parameter
-            // exists
             log.info("Invoking constructor with {} argument. ClassName={}, interfaceName={}",
                 constructorArgClass.getName(), className, intrface.getName());
             instance = this.getClass().getClassLoader()
@@ -221,7 +214,7 @@ public class Server {
     public void internalPublish(MqttPublishMessage msg, final String clientId) {
         final int messageID = msg.variableHeader().packetId();
         if (!initialized) {
-            log.info("Moquette is not started, internal message cannot be published. CId: {}, messageId: {}", clientId,
+            log.info("Mqtt is not started, internal message cannot be published. CId: {}, messageId: {}", clientId,
                 messageID);
             throw new IllegalStateException("Can't publish on a integration is not yet started");
         }
@@ -230,17 +223,15 @@ public class Server {
     }
 
     public void stopServer() {
-        log.info("Unbinding integration from the configured ports");
+        log.info("释放");
         acceptor.close();
-        log.info("Stopping MQTT protocol processor");
+        log.info("停止MQTT服务器");
         initialized = false;
 
-        // calling shutdown() does not actually stop tasks that are not cancelled,
-        // and SessionsRepository does not stop its tasks. Thus shutdownNow().
         scheduler.shutdownNow();
 
 
-        log.info("Moquette integration has been stopped.");
+        log.info("服务器已经停止");
     }
 
     public int getPort() {
@@ -255,7 +246,7 @@ public class Server {
      */
     public void addInterceptHandler(InterceptHandler interceptHandler) {
         if (!initialized) {
-            log.info("Moquette is not started, MQTT message interceptor cannot be added. InterceptorId={}",
+            log.info("Mqtt is not started, MQTT message interceptor cannot be added. InterceptorId={}",
                 interceptHandler.getID());
             throw new IllegalStateException("Can't register interceptors on a integration that is not yet started");
         }
@@ -270,7 +261,7 @@ public class Server {
      */
     public void removeInterceptHandler(InterceptHandler interceptHandler) {
         if (!initialized) {
-            log.info("Moquette is not started, MQTT message interceptor cannot be removed. InterceptorId={}",
+            log.info("Mqtt is not started, MQTT message interceptor cannot be removed. InterceptorId={}",
                 interceptHandler.getID());
             throw new IllegalStateException("Can't deregister interceptors from a integration that is not yet started");
         }
