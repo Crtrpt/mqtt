@@ -1,6 +1,2 @@
-## 高性能MQTT服务器
-
-# 私人订制
-
-特性
-- 二级存储
+## 结构图
+![image](image/graphviz.svg)

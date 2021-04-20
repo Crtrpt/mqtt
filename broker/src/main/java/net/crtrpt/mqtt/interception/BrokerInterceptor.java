@@ -107,7 +107,7 @@ public final class BrokerInterceptor implements Interceptor {
     @Override
     public void notifyClientDisconnected(final String clientID, final String username) {
         for (final InterceptHandler handler : this.handlers.get(InterceptDisconnectMessage.class)) {
-            LOG.debug("发送mqtt断开消息给中断. CId={}, username={}, interceptorId={}",
+            LOG.info("发送mqtt断开消息给中断. CId={}, username={}, interceptorId={}",
                 clientID, username, handler.getID());
             executor.execute(() -> handler.onDisconnect(new InterceptDisconnectMessage(clientID, username)));
         }
@@ -116,7 +116,7 @@ public final class BrokerInterceptor implements Interceptor {
     @Override
     public void notifyClientConnectionLost(final String clientID, final String username) {
         for (final InterceptHandler handler : this.handlers.get(InterceptConnectionLostMessage.class)) {
-            LOG.debug("发送异常断开给中断 CId={}, username={}, " +
+            LOG.info("发送异常断开给中断 CId={}, username={}, " +
                 "interceptorId={}", clientID, username, handler.getID());
             executor.execute(() -> handler.onConnectionLost(new InterceptConnectionLostMessage(clientID, username)));
         }
@@ -131,7 +131,7 @@ public final class BrokerInterceptor implements Interceptor {
                     int messageId = msg.variableHeader().messageId();
                     String topic = msg.variableHeader().topicName();
                     for (InterceptHandler handler : handlers.get(InterceptPublishMessage.class)) {
-                        LOG.debug("通知mqtt发送消息给中断 CId={}, messageId={}, topic={}, "
+                        LOG.info("通知mqtt发送消息给中断 CId={}, messageId={}, topic={}, "
                                 + "interceptorId={}", clientID, messageId, topic, handler.getID());
                         handler.onPublish(new InterceptPublishMessage(msg, clientID, username));
                     }
@@ -144,7 +144,7 @@ public final class BrokerInterceptor implements Interceptor {
     @Override
     public void notifyTopicSubscribed(final Subscription sub, final String username) {
         for (final InterceptHandler handler : this.handlers.get(InterceptSubscribeMessage.class)) {
-            LOG.debug("通知订阅消息给中断 CId={}, topicFilter={}, interceptorId={}",
+            LOG.info("通知订阅消息给中断 CId={}, topicFilter={}, interceptorId={}",
                 sub.getClientId(), sub.getTopicFilter(), handler.getID());
             executor.execute(() -> handler.onSubscribe(new InterceptSubscribeMessage(sub, username)));
         }
@@ -153,7 +153,7 @@ public final class BrokerInterceptor implements Interceptor {
     @Override
     public void notifyTopicUnsubscribed(final String topic, final String clientID, final String username) {
         for (final InterceptHandler handler : this.handlers.get(InterceptUnsubscribeMessage.class)) {
-            LOG.debug("取消订阅消息给中断. CId={}, topic={}, interceptorId={}", clientID,
+            LOG.info("取消订阅消息给中断. CId={}, topic={}, interceptorId={}", clientID,
                 topic, handler.getID());
             executor.execute(() -> handler.onUnsubscribe(new InterceptUnsubscribeMessage(topic, clientID, username)));
         }
@@ -162,7 +162,7 @@ public final class BrokerInterceptor implements Interceptor {
     @Override
     public void notifyMessageAcknowledged(final InterceptAcknowledgedMessage msg) {
         for (final InterceptHandler handler : this.handlers.get(InterceptAcknowledgedMessage.class)) {
-            LOG.debug("通知 MQTT ACK 消息给中断. CId={}, messageId={}, topic={}, interceptorId={}",
+            LOG.info("通知 MQTT ACK 消息给中断. CId={}, messageId={}, topic={}, interceptorId={}",
                 msg.getMsg()/*.getClientID()*/, msg.getPacketID(), msg.getTopic(), handler.getID());
             executor.execute(() -> handler.onMessageAcknowledged(msg));
         }

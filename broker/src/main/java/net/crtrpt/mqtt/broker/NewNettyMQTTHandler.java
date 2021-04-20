@@ -89,7 +89,7 @@ public class NewNettyMQTTHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        LOG.error("Unexpected exception while processing MQTT message. Closing Netty channel. CId={}",
+        LOG.error("处理消息的时候捕获到异常 CId={}",
                   NettyUtils.clientID(ctx.channel()), cause);
         ctx.close().addListener(CLOSE_ON_FAILURE);
     }

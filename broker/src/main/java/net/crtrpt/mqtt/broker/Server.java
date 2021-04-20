@@ -18,6 +18,7 @@ package net.crtrpt.mqtt.broker;
 
 import net.crtrpt.mqtt.BrokerConstants;
 import net.crtrpt.mqtt.broker.subscriptions.Topic;
+import net.crtrpt.mqtt.interception.FunctionInterceptor;
 import net.crtrpt.mqtt.interception.InterceptHandler;
 import net.crtrpt.mqtt.MemorySubscriptionsRepository;
 import net.crtrpt.mqtt.interception.BrokerInterceptor;
@@ -73,7 +74,9 @@ public class Server {
      */
     public void startServer(IConfig config) throws IOException {
         log.info("启动MQTT服务器");
-        startServer(config, null);
+        List<InterceptHandler> handlers=new ArrayList<>();
+        handlers.add(new FunctionInterceptor());
+        startServer(config, handlers);
     }
 
     public void startServer(IConfig config, List<? extends InterceptHandler> handlers) throws IOException {

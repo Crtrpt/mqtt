@@ -211,7 +211,7 @@ class PostOffice {
 
             boolean isSessionPresent = targetSession != null;
             if (isSessionPresent) {
-                LOG.info("Sending PUBLISH message to active subscriber CId: {}, topicFilter: {}, qos: {}",
+                LOG.info("转发消息给订阅者 CId: {}, topicFilter: {}, qos: {}",
                           sub.getClientId(), sub.getTopicFilter(), qos);
                 // we need to retain because duplicate only copy r/w indexes and don't retain() causing refCnt = 0
                 ByteBuf payload = origPayload.retainedDuplicate();
